@@ -1,0 +1,19 @@
+# Instantiate the bounding box extractor
+bbox_extractor = BoundingBoxExtractor()
+
+# Example points (replace with your own points)
+points = [(1, 2), (3, 4), (5, 6), (0, 8)]
+
+# Update the bounding box extractor with the points
+for x, y in points:
+    bbox_extractor.update(x, y)
+
+# Get the computed bounding box coordinates
+min_x, min_y, max_x, max_y = bbox_extractor.get_bounding_box()
+
+# Print the bounding box coordinates
+print("Bounding box coordinates:")
+print(f"Min X: {min_x}")
+print(f"Min Y: {min_y}")
+print(f"Max X: {max_x}")
+print(f"Max Y: {max_y}")
