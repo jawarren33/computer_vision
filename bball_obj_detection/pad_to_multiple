@@ -1,0 +1,30 @@
+import tensorflow as tf
+
+def pad_to_multiple(tensor, multiple):
+    """
+    Pad the tensor with zeros to the specified multiple using TensorFlow.
+
+    Args:
+        tensor: Tensor to be padded.
+        multiple: Integer specifying the desired multiple for padding.
+
+    Returns:
+        Padded tensor.
+    """
+    # Get the shape of the tensor
+    shape = tf.shape(tensor)
+
+    # Compute the padding amount for each dimension
+    padding = tf.maximum(tf.constant([0, 0]), tf.math.ceil(shape / multiple) * multiple - shape)
+
+    # Pad the tensor with zeros
+    padded_tensor = tf.pad(tensor, tf.stack([(0, padding[0]), (0, padding[1])]))
+
+    return padded_tensor
+
+#In this function, tensor is the input tensor that needs to be padded, and multiple is the desired multiple for padding. 
+#The function computes the padding amount for each dimension by calculating the difference between the closest higher multiple of multiple and the shape of the tensor.
+
+#The tf.pad operation is then used to pad the tensor with zeros. The padding is applied symmetrically to the top and bottom dimensions and the left and right dimensions.
+
+#Finally, the padded tensor is returned as the output.
