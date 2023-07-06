@@ -21,6 +21,8 @@ model = tf.saved_model.load("path/to/pretrained/model")
 confidence_threshold = 0.5
 
 # Open the video file
+from tools import vid_read
+
 video_path = "path/to/video/file.mp4"
 video = cv2.VideoCapture(video_path)
 
