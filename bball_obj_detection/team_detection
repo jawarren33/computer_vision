@@ -1,0 +1,78 @@
+#In this code, we assume you have a pre-trained object detection model saved in a TensorFlow SavedModel format. 
+#You can load the model using tf.saved_model.load by providing the path to the model directory.
+
+#We set a confidence threshold to filter the detected objects based on their confidence scores, as before.
+#Define a label_map dictionary that maps label IDs to their corresponding team labels. You can modify this dictionary based on your specific team labels.
+#After preprocessing the frame and performing object detection, we filter the detections based on the confidence threshold, similar to before.
+#Iterate over the filtered detections and extract the label ID, confidence score, and bounding box coordinates. Using the label_map, we assign the corresponding team label to each player.
+#Finally, we can process the assigned labels and visualize them by drawing bounding boxes with labels on the frame.
+#Make sure to replace the "path"
+
+import tensorflow as tf
+import cv2
+
+# Load the pre-trained object detection model
+model = tf.saved_model.load("path/to/pretrained/model")
+
+# Set the threshold for object detection confidence
+confidence_threshold = 0.5
+
+# Load the label map for player labels
+label_map = {
+    1: "Team A",
+    2: "Team B"
+}
+
+# Open the video file
+video_path = "path/to/video/file.mp4"
+video = cv2.VideoCapture(video_path)
+
+# Check if the video file was successfully opened
+if not video.isOpened():
+    print("Error opening video file!")
+    exit()
+
+# Iterate over the video frames and perform object detection and classification
+while True:
+    ret, frame = video.read()
+
+    # If the frame was not read correctly or we reached the end of the video, break the loop
+    if not ret:
+        break
+
+    # Preprocess the frame
+    input_tensor = tf.convert_to_tensor(frame)
+    input_tensor = input_tensor[tf.newaxis, ...]
+
+    # Perform object detection on the frame
+    detections = model(input_tensor)
+    num_detections = int(detections.pop("num_detections"))
+    detections = {key: value[0, :num_detections].numpy() for key, value in detections.items()}
+    detections["num_detections"] = num_detections
+
+    # Filter the detections based on confidence threshold
+    indexes = tf.where(detections["detection_scores"] > confidence_threshold)
+    filtered_detections = {key: value[indexes].numpy() for key, value in detections.items()}
+
+    # Process the filtered detections (e.g., draw bounding boxes and assign labels)
+    for i in range(filtered_detections["num_detections"]):
+        label_id = int(filtered_detections["detection_classes"][i])
+        label_score = filtered_detections["detection_scores"][i]
+        label_box = filtered_detections["detection_boxes"][i]
+
+        # Assign the label based on the label_map
+        label = label_map.get(label_id, "Unknown")
+
+        # Visualize and process the label (e.g., draw bounding boxes with labels)
+        # ...
+
+    # Display the frame with detections
+    cv2.imshow("Object Detection", frame)
+
+    # Exit the loop if the 'q' key is pressed
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Release the video object and close the window
+video.release()
+cv2.destroyAllWindows()
