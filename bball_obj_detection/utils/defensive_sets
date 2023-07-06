@@ -1,0 +1,16 @@
+defensive_sets = {
+    'Man-to-Man': 'Each defender guards a specific opponent player, staying with them closely throughout the possession.',
+    'Zone Defense': 'Defenders are assigned specific zones on the court to guard instead of individual players.',
+    'Press Defense': 'A full-court defensive strategy where defenders apply intense pressure on the ball handler to disrupt their offense.',
+    'Trap Defense': 'A defensive strategy where two defenders aggressively double-team the ball handler to force turnovers or difficult passes.',
+    'Switching Defense': 'Defenders switch assignments when their teammates are involved in screens or off-ball actions to maintain coverage.',
+    'Help Defense': 'Defenders provide support and help to teammates by rotating, helping in the paint, or contesting shots.',
+    'Shot Blocking': 'Defenders aim to block or alter shots by using their size, timing, and jumping ability.',
+    'Steals and Deflections': 'Defenders actively try to disrupt passes and create turnovers by getting steals or deflections.',
+    'Rebounding': 'Defenders focus on boxing out opponents and grabbing rebounds to limit second-chance opportunities.',
+    'Closeouts': 'Defenders quickly close out on shooters to contest shots and prevent open looks.'
+}
+
+# Accessing specific defensive sets
+print(defensive_sets['Man-to-Man'])
+print(defensive_sets['Press Defense'])
