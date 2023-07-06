@@ -1,0 +1,21 @@
+import tensorflow as tf
+
+def create_dense_vector_with_indices(indices, size, value):
+    """
+    Create a dense vector in TensorFlow with specific indices set to a specific value and the rest set to zeros.
+
+    Args:
+        indices: Tensor of shape (num_indices,) containing the indices where the value should be set.
+        size: Integer specifying the size of the dense vector.
+        value: Scalar value to be set at the specified indices.
+
+    Returns:
+        Dense vector with the specified indices set to the specified value and the rest set to zeros.
+    """
+    # Create a tensor with zeros
+    dense_vector = tf.zeros((size,), dtype=tf.float32)
+
+    # Set the specified indices to the specified value
+    dense_vector = tf.tensor_scatter_nd_update(dense_vector, tf.expand_dims(indices, axis=1), tf.constant(value))
+
+    return dense_vector
