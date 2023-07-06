@@ -1,0 +1,32 @@
+import tensorflow as tf
+
+def tile_contents(x, y):
+    """
+    Tile the contents of x and y into a pair of grids using TensorFlow.
+
+    Args:
+        x: Tensor of shape (batch_size, height, width, channels) representing the content for the first grid.
+        y: Tensor of shape (batch_size, height, width, channels) representing the content for the second grid.
+
+    Returns:
+        Tensor of shape (batch_size, height*2, width*2, channels) containing the tiled grids.
+    """
+    # Get the batch size, height, width, and number of channels
+    batch_size, height, width, channels = x.get_shape().as_list()
+
+    # Tile the contents of x and y
+    x_tiled = tf.tile(x, [1, 2, 2, 1])
+    y_tiled = tf.tile(y, [1, 2, 2, 1])
+
+    # Concatenate the tiled contents into a pair of grids
+    grid_top = tf.concat([x_tiled, y_tiled], axis=2)
+    grid_bottom = tf.concat([y_tiled, x_tiled], axis=2)
+    grids = tf.concat([grid_top, grid_bottom], axis=1)
+
+    return grids
+
+#In this function, we assume that x and y are tensors representing the content for the first and second grids, respectively. 
+#The tensors have shapes (batch_size, height, width, channels), where batch_size is the number of samples in the batch, height and width are the dimensions of the grids, and channels is the number of channels in the content.
+
+#The function uses the tf.tile operation to tile the contents of x and y. We tile x and y to double the height and width of each grid. Then, we concatenate the tiled contents into a pair of grids, where the top-left quadrant contains x tiled twice and the bottom-right quadrant contains y tiled twice.
+#Finally, the function returns the grids tensor with shape (batch_size, height*2, width*2, channels), which contains the tiled grids.
