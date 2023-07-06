@@ -1,0 +1,20 @@
+def expanded_shape(orig_shape, start_dim, num_dims):
+  """Inserts multiple ones into a shape vector.
+
+  Inserts an all-1 vector of length num_dims at position start_dim into a shape.
+  Can be combined with tf.reshape to generalize tf.expand_dims.
+
+  Args:
+    orig_shape: the shape into which the all-1 vector is added (int32 vector)
+    start_dim: insertion position (int scalar)
+    num_dims: length of the inserted all-1 vector (int scalar)
+  Returns:
+    An int32 vector of length tf.size(orig_shape) + num_dims.
+  """
+  with tf.name_scope('ExpandedShape'):
+    start_dim = tf.expand_dims(start_dim, 0)  # scalar to rank-1
+    before = tf.slice(orig_shape, [0], start_dim)
+    add_shape = tf.ones(tf.reshape(num_dims, [1]), dtype=tf.int32)
+    after = tf.slice(orig_shape, start_dim, [-1])
+    new_shape = tf.concat([before, add_shape, after], 0)
+    return new_shape
