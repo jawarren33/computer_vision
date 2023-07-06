@@ -1,0 +1,29 @@
+import cv2
+
+# Open the video file
+video_path = "path/to/video/file.mp4"  # Replace with the actual path to your video file
+video = cv2.VideoCapture(video_path)
+
+# Check if the video file was successfully opened
+if not video.isOpened():
+    print("Error opening video file!")
+    exit()
+
+# Read and display each frame from the video
+while True:
+    ret, frame = video.read()
+
+    # If the frame was not read correctly or we reached the end of the video, break the loop
+    if not ret:
+        break
+
+    # Display the frame in a window called "Video"
+    cv2.imshow("Video", frame)
+
+    # Exit the loop if the 'q' key is pressed
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Release the video object and close the window
+video.release()
+cv2.destroyAllWindows()
