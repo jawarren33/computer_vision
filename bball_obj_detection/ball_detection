@@ -1,0 +1,66 @@
+#In this code, we assume you have a pre-trained object detection model saved in a TensorFlow SavedModel format. 
+#You can load the model using tf.saved_model.load by providing the path to the model directory.
+#Next, we set a confidence threshold to filter the detected objects based on their confidence scores. 
+#Objects with scores below the threshold will be ignored.
+#We open the video file using OpenCV and iterate over its frames. For each frame, we preprocess it, convert it to a TensorFlow tensor, and perform object detection using the loaded model. 
+#The detections returned by the model are then filtered based on the confidence threshold.
+#You can process the filtered detections as needed, such as drawing bounding boxes around the detected basketballs or performing additional analysis.
+#Finally, we display the frame with the detections using OpenCV's imshow function. The loop continues until the video ends or the 'q' key is pressed.
+#Make sure to replace the "path/to/pretrained/model" with the actual path to your pre-trained object detection model, and "path/to/video/file.mp4" with the actual path to your video file.
+
+#Note: The exact implementation and model selection may vary depending on the specific object detection model you're using. 
+#You might need to adjust the code accordingly to match the requirements of your chosen model.
+
+import tensorflow as tf
+import cv2
+
+# Load the pre-trained object detection model
+model = tf.saved_model.load("path/to/pretrained/model")
+
+# Set the threshold for object detection confidence
+confidence_threshold = 0.5
+
+# Open the video file
+video_path = "path/to/video/file.mp4"
+video = cv2.VideoCapture(video_path)
+
+# Check if the video file was successfully opened
+if not video.isOpened():
+    print("Error opening video file!")
+    exit()
+
+# Iterate over the video frames and perform object detection
+while True:
+    ret, frame = video.read()
+
+    # If the frame was not read correctly or we reached the end of the video, break the loop
+    if not ret:
+        break
+
+    # Preprocess the frame
+    input_tensor = tf.convert_to_tensor(frame)
+    input_tensor = input_tensor[tf.newaxis, ...]
+
+    # Perform object detection on the frame
+    detections = model(input_tensor)
+    num_detections = int(detections.pop("num_detections"))
+    detections = {key: value[0, :num_detections].numpy() for key, value in detections.items()}
+    detections["num_detections"] = num_detections
+
+    # Filter the detections based on confidence threshold
+    indexes = tf.where(detections["detection_scores"] > confidence_threshold)
+    filtered_detections = {key: value[indexes].numpy() for key, value in detections.items()}
+
+    # Visualize and process the filtered detections (e.g., draw bounding boxes)
+    # ...
+
+    # Display the frame with detections
+    cv2.imshow("Object Detection", frame)
+
+    # Exit the loop if the 'q' key is pressed
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Release the video object and close the window
+video.release()
+cv2.destroyAllWindows()
