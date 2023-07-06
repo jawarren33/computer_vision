@@ -54,7 +54,7 @@ while True:
     filtered_detections = {key: value[indexes].numpy() for key, value in detections.items()}
 
     # Visualize and process the filtered detections (e.g., draw bounding boxes)
-    # ...
+    from utils import BoundingBoxExtractor
 
     # Display the frame with detections
     cv2.imshow("Object Detection", frame)
