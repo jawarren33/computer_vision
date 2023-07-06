@@ -1,0 +1,76 @@
+###
+The code calculates the distance traveled by the object based on the change in center coordinates between consecutive frames. 
+It then calculates the time elapsed between frames using the frame timestamps.
+Finally, it calculates the object's speed by dividing the distance traveled by the time elapsed.
+###
+
+import cv2
+import numpy as np
+
+# Define the known distance in meters
+known_distance = 5.0  # Example: Assuming the distance between two points is 5 meters
+
+# Define the width of the object in pixels
+known_width = 100  # Example: Assuming the width of the object is 100 pixels
+
+# Load the video file
+video_path = 'path/to/video/file.mp4'
+video = cv2.VideoCapture(video_path)
+
+# Check if the video file was successfully opened
+if not video.isOpened():
+    print("Error opening video file!")
+    exit()
+
+# Initialize variables
+frame_counter = 0
+prev_center = None
+prev_timestamp = None
+speeds = []
+
+# Process video frames
+while True:
+    ret, frame = video.read()
+
+    # If the frame was not read correctly or we reached the end of the video, break the loop
+    if not ret:
+        break
+
+    # Perform object detection and tracking
+    # ...
+
+    # Calculate object speed
+    if prev_center is not None:
+        # Calculate the distance traveled by the object
+        current_center = (x, y)  # Example: Obtained from object tracking
+        distance_pixels = np.linalg.norm(np.array(current_center) - np.array(prev_center))
+        distance_meters = (distance_pixels * known_distance) / known_width
+
+        # Calculate time elapsed between frames
+        current_timestamp = video.get(cv2.CAP_PROP_POS_MSEC) / 1000.0  # Get current timestamp in seconds
+        time_elapsed = current_timestamp - prev_timestamp
+
+        # Calculate speed in meters per second
+        speed = distance_meters / time_elapsed
+        speeds.append(speed)
+
+    # Update previous center and timestamp
+    prev_center = current_center
+    prev_timestamp = current_timestamp
+
+    # Display the frame with object tracking overlay
+    cv2.imshow("Video", frame)
+
+    # Exit the loop if the 'q' key is pressed
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Calculate average speed
+average_speed = np.mean(speeds)
+
+# Print the average speed
+print("Average Speed: {:.2f} meters per second".format(average_speed))
+
+# Release the video object and close the window
+video.release()
+cv2.destroyAllWindows()
