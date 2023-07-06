@@ -1,0 +1,28 @@
+import tensorflow as tf
+
+def convert_boxes_to_image_coordinates(boxes, image_height, image_width):
+    """
+    Convert a batch of bounding boxes from normal coordinates to image coordinates.
+
+    Args:
+        boxes: Tensor of shape (batch_size, num_boxes, 4) containing the bounding box coordinates in normal format.
+               The last dimension represents (y_min, x_min, y_max, x_max) of each box.
+        image_height: Integer specifying the height of the image.
+        image_width: Integer specifying the width of the image.
+
+    Returns:
+        Tensor of shape (batch_size, num_boxes, 4) containing the bounding box coordinates in image format.
+    """
+    # Extract the coordinates of each box
+    y_min, x_min, y_max, x_max = tf.split(boxes, 4, axis=-1)
+
+    # Convert the coordinates to image format
+    image_y_min = y_min * image_height
+    image_x_min = x_min * image_width
+    image_y_max = y_max * image_height
+    image_x_max = x_max * image_width
+
+    # Concatenate the coordinates back into boxes tensor
+    image_boxes = tf.concat([image_y_min, image_x_min, image_y_max, image_x_max], axis=-1)
+
+    return image_boxes
