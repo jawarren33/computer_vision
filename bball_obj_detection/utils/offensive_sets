@@ -1,0 +1,16 @@
+offensive_sets = {
+    'Pick and Roll': 'A play where a ball handler (usually the point guard) and a screener (usually a big man) work together to create scoring opportunities.',
+    'Isolation': 'When a player has the ball and takes on their defender one-on-one without much involvement from other players.',
+    'Post-Up': 'When a player establishes position in the low post and receives the ball to score or make a play.',
+    'Drive and Kick': 'When a player drives towards the basket and then kicks the ball out to an open teammate on the perimeter.',
+    'Off-Ball Screens': 'When a player without the ball uses screens set by teammates to get open for a shot or create spacing.',
+    'Transition': 'When a team quickly moves the ball up the court after a defensive rebound or turnover to catch the defense off guard.',
+    'Cutting': 'When a player without the ball makes a quick move towards the basket to receive a pass for an easy score.',
+    'Floppy': 'A play where two players positioned on the wings use staggered screens to create scoring opportunities for each other.',
+    'Horns': 'A play that starts with two big men positioned at the elbows and involves a variety of actions and options.',
+    'Motion Offense': 'A continuous, free-flowing offensive system that emphasizes ball movement, player movement, and reads.',
+}
+
+# Accessing specific offensive sets
+print(offensive_sets['Pick and Roll'])
+print(offensive_sets['Motion Offense'])
