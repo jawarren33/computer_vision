@@ -1,0 +1,29 @@
+import tensorflow as tf
+
+def dense_to_sparse_boxes(boxes, image_height, image_width):
+    """
+    Convert bounding boxes from dense to sparse form in TensorFlow.
+
+    Args:
+        boxes: Tensor of shape (num_boxes, 4) representing the bounding boxes in dense form.
+               Each row contains (y_min, x_min, y_max, x_max) coordinates of a box.
+        image_height: Integer specifying the height of the image.
+        image_width: Integer specifying the width of the image.
+
+    Returns:
+        Sparse tensor representing the bounding boxes in sparse form.
+    """
+    # Normalize the box coordinates
+    y_min, x_min, y_max, x_max = tf.split(boxes, 4, axis=-1)
+    y_min = y_min / image_height
+    x_min = x_min / image_width
+    y_max = y_max / image_height
+    x_max = x_max / image_width
+
+    # Create the sparse tensor
+    indices = tf.constant([[0, 0]])
+    values = tf.concat([y_min, x_min, y_max, x_max], axis=-1)
+    shape = tf.constant([1, 4])
+    sparse_boxes = tf.sparse.SparseTensor(indices, values, shape)
+
+    return sparse_boxes
