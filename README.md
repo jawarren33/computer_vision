@@ -7,7 +7,7 @@ Hope you enjoy cloning this repo and trying out things yourself.
 
 To download and use a pre-trained TensorFlow model, you need to follow these general steps:
 
-1. Identify the Model: Determine which pre-trained model you want to use. TensorFlow provides a collection of pre-trained models in the TensorFlow Model Zoo (https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_detection_zoo.md) for various tasks such as object detection, image classification, and more. Choose a model that suits your specific task and requirements.
+1. Identify the Model: Determine which pre-trained model you want to use. TensorFlow provides a collection of pre-trained models in the TensorFlow Model Zoo (https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_detection_zoo.md) for various tasks such as object detection, image classification, and more. 
 
 2. Download the Model: Once you've selected the model, you can download it from the TensorFlow Model Zoo or the respective model repository. Typically, the model files are available in a format like TensorFlow SavedModel, frozen graph, or checkpoint files. Download the files related to your chosen model.
 
