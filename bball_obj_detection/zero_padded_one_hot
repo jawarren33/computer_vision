@@ -1,0 +1,31 @@
+import tensorflow as tf
+
+def zero_padded_one_hot(indices, depth, padding_size):
+    """
+    Generate a zero-padded one-hot tensor in TensorFlow.
+
+    Args:
+        indices: Tensor of shape (batch_size, length) containing the indices to be one-hot encoded.
+        depth: Integer specifying the number of classes.
+        padding_size: Integer specifying the desired size of the padding.
+
+    Returns:
+        Zero-padded one-hot tensor of shape (batch_size, length + padding_size, depth).
+    """
+    # Compute the original length of the indices tensor
+    length = tf.shape(indices)[1]
+
+    # One-hot encode the indices tensor
+    one_hot_encoded = tf.one_hot(indices, depth)
+
+    # Pad the one-hot tensor with zeros
+    padded_tensor = tf.pad(one_hot_encoded, tf.stack([(0, 0), (0, padding_size - length), (0, 0)]))
+
+    return padded_tensor
+
+#In this function, indices is a tensor of shape (batch_size, length) containing the indices that need to be one-hot encoded. depth is an integer specifying the number of classes or categories. padding_size is the desired size of the padding to be added.
+
+#The function uses the tf.one_hot operation to one-hot encode the indices tensor, creating a tensor of shape (batch_size, length, depth). 
+#Then, it pads the one-hot tensor with zeros using the tf.pad operation. The padding is applied to the second dimension to match the desired padding_size, ensuring that the resulting tensor has shape (batch_size, length + padding_size, depth).
+
+#Finally, the padded one-hot tensor is returned as the output.
