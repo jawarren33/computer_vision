@@ -1,0 +1,82 @@
+from tkinter.filedialog import askopenfilename
+from tkinter import *
+from tkinter import messagebox
+import os
+import cv2
+
+
+# Create an instance of tkinter frame or window
+win = Tk()
+win.title("Video to Image Generator")
+# Set the size of the tkinter window
+# win.geometry("350x350")
+
+#Function to generate data folder
+def generate_Data_Folder():
+    print("check3")
+
+    try:
+        if not os.path.exists('sole_samples_color'):
+            os.makedirs('sole_samples_color')
+    except:
+        if not os.path.exists('sole_samples_color'):
+            os.makedirs('sole_samples_color')
+
+#function to generate data
+def generate_Data(Video_file):
+    print("check4")
+    cam = cv2.VideoCapture(Video_file)
+    currentframe = 0
+    while (True):
+        # read frames from video
+        ret, frame = cam.read()
+        if ret:
+            # if video is still left continue creating images
+            name = './sole_samples_color/frame' + str(currentframe) + '.jpg'
+            print('Creating...' + name)
+
+            # writing the extracted images
+            cv2.imwrite(name, frame)
+
+            # increasing counter so that it will
+            # show how many frames are created
+            currentframe += 1
+        else:
+            break
+
+def on_click():
+    Tk().withdraw()
+    filename = askopenfilename()
+    print(filename)
+    print("check1")
+    while not filename.lower().endswith(('.mp3','.mp4','.mov')):
+        answer = messagebox.askretrycancel('Error','File incompatible. Hit Cancel to Quit')
+        if answer:
+            Tk().withdraw()
+            filename = askopenfilename()
+            # print(filename)
+        else:
+            quit()
+            break
+    if filename.lower().endswith(('.mp3','.mp4','.mov')):
+        print("check2")
+        generate_Data_Folder()
+        generate_Data(filename)
+        messagebox.showinfo('Success','Image Data generated')
+    else:
+        messagebox.showerror('Program Crashed', 'Please contact the engineer who wrote this...')
+        quit()
+
+
+# Create a label widget
+label = Label(win, text="Python Video to Picture Data Collection",
+font=('Calibri 15 bold'))
+label.pack(pady=20)
+
+
+# Create a button to delete the button
+b = Button(win, text="Upload Video", command=on_click)
+b.pack(pady=20)
+q = Button(win, text="Quit", command=win.destroy).pack()
+
+win.mainloop()
