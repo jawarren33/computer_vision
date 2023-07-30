@@ -1,0 +1,106 @@
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+import numpy as np
+import cv2
+from collections import Counter
+from skimage.color import rgb2lab, deltaE_cie76
+import os
+import pandas as pd
+
+directory = #set dir path
+df_main_light = pd.DataFrame()
+df_main_dark = pd.DataFrame()
+lst = []
+id = 0
+
+image = cv2.imread(path)
+print("The type of this input is {}".format(type(image)))
+#print("Shape: {}".format(image.shape))
+
+# COLOR
+image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+plt.imshow(image)
+
+# GRAYSCALE
+gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+#plt.imshow(gray_image, cmap='gray')
+
+# Resize
+resized_image = cv2.resize(image, (200, 400))
+#plt.imshow(resized_image)
+
+# Function to convert RGB coordinates to Hex
+def RGB2HEX(color):
+    return "#{:02x}{:02x}{:02x}".format(int(color[0]), int(color[1]), int(color[2]))
+
+# Function to pull image and convert to RGB
+def get_image(image_path):
+    image = cv2.imread(image_path)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    return image
+
+# Check if color matches
+rgb_min = 90
+rgb_max = 101
+
+def minmax(val_list):
+    min_val = min(val_list)
+    max_val = max(val_list)
+
+    if min_val > rgb_min and max_val < rgb_max:
+        print('COLOR MATCH SUCCESSFUL')
+        print(val_list)
+    else:
+        print('COLOR MATCH FAIL')
+    return (min_val, max_val)
+
+
+
+
+# Resize image
+modified_image = cv2.resize(image, (200, 400), interpolation = cv2.INTER_AREA)
+modified_image = modified_image.reshape(modified_image.shape[0]*modified_image.shape[1], 3)
+
+# Set # of clusters
+n_colors = 3
+# run KMeans and predict labels
+clf = KMeans(n_clusters = n_colors, random_state = 0)
+labels = clf.fit_predict(modified_image)
+print("Number of K-Means Iterations: ", clf.n_iter_)
+cluster_wss = []
+for k in range(n_colors):
+    cluster_wss.append(clf.inertia_)
+
+print(cluster_wss)
+# Count number of label occurences
+counts = Counter(labels)
+
+# Assign coordinates of cluster centers
+center_colors = clf.cluster_centers_
+
+# Get ordered colors by iterating through the keys
+ordered_colors = [center_colors[i] for i in counts.keys()]
+id+=1 
+d = {'id':id, 'r':ordered_colors[0], 'g':ordered_colors[1], 'b':ordered_colors[2]}
+
+df_main_light = df_main_light.append(d, ignore_index=True)
+#lst.append({id: df})
+
+
+hex_colors = [RGB2HEX(ordered_colors[i]) for i in counts.keys()]
+
+for i in ordered_colors:
+    minmax(i) 
+# Remove background value
+#hex_colors.pop(0)
+rgb_colors = [ordered_colors[i] for i in counts.keys()]
+#counts.pop(0)
+
+#print(color_check(ordered_colors))
+print('RGB Values Detected:\n',ordered_colors)
+
+show_chart = True
+
+if (show_chart):
+    plt.figure(figsize = (10, 8))
+    plt.pie(counts.values(), labels = hex_colors, colors = hex_colors)
