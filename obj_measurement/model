@@ -9,6 +9,9 @@ import imutils
 import skimage.io
 from cv2 import aruco
 
+rvec, tvec = aruco.estimatePoseSingleMarkers(corners, markerLength, camera_matrix, dist_coeffs) # For a single marker
+imgWithAruco = aruco.drawDetectedMarkers(imgRemapped, corners, ids, (0,255,0))
+imgWithAruco = aruco.drawAxis(imgWithAruco, camera_matrix, dist_coeffs, rvec, tvec, 100)    # axis length 100 can be changed according to your requirement
 
 class HomogeneousBgDetector():
     def __init__(self):
